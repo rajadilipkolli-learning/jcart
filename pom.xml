@@ -1,66 +1,56 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
 	http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>com.sivalabs</groupId>
-    <artifactId>jcart</artifactId>
-    <version>1.0</version>
-    <packaging>pom</packaging>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.sivalabs</groupId>
+	<artifactId>jcart</artifactId>
+	<version>1.0</version>
+	<packaging>pom</packaging>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-dependencies</artifactId>
-        <version>2.4.5</version>
-    </parent>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-dependencies</artifactId>
+		<version>2.4.5</version>
+	</parent>
 
-    <scm>
-        <url>https://github.com/rajadileepkolli/jcart</url>
-        <connection>scm:git:https://github.com/rajadileepkolli/jcart</connection>
-        <developerConnection>scm:git:https://github.com/rajadileepkolli</developerConnection>
-        <tag>scm:git:https://github.com/rajadileepkolli/jcart/tag</tag>
-    </scm>
+	<scm>
+		<url>https://github.com/rajadileepkolli/jcart</url>
+		<connection>scm:git:https://github.com/rajadileepkolli/jcart</connection>
+		<developerConnection>scm:git:https://github.com/rajadileepkolli</developerConnection>
+		<tag>scm:git:https://github.com/rajadileepkolli/jcart/tag</tag>
+	</scm>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>	
-		<sonar.jdbc.url>jdbc:mysql://localhost:3306/sonar?useUnicode=true&amp;characterEncoding=utf8&amp;rewriteBatchedStatements=true</sonar.jdbc.url>
-        <sonar.jdbc.username>root</sonar.jdbc.username>
-        <sonar.jdbc.password>admin</sonar.jdbc.password>
-        <sonar.language>java</sonar.language>
-        <sonar.junit.reportsPath>${project.basedir}/target/surefire-reports</sonar.junit.reportsPath>
-    </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
+		<sonar.projectKey>rajadileepkolli_jcart</sonar.projectKey>
+		<sonar.moduleKey>${artifactId}</sonar.moduleKey>
+		<sonar.organization>rajadileepkolli</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+	</properties>
 
-    <modules>
-        <module>jcart-core</module>
-        <module>jcart-admin</module>
-        <module>jcart-site</module>
-    </modules>
+	<modules>
+		<module>jcart-core</module>
+		<module>jcart-admin</module>
+		<module>jcart-site</module>
+	</modules>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.sonarsource.scanner.maven</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>3.9.0.2155</version>
-            </plugin>
-        </plugins>
-    </build>
-    
-    <repositories>
+	<repositories>
 		<repository>
 			<id>spring-snapshots</id>
 			<name>Spring Snapshots</name>
