@@ -6,6 +6,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -40,7 +41,7 @@ public class SecurityServiceImpl implements SecurityService {
 	private final RoleRepository roleRepository;
 
 	@Override
-	public User findUserByEmail(String userEmail) {
+	public Optional<User> findUserByEmail(String userEmail) {
 		return userRepository.findByEmail(userEmail);
 	}
 
@@ -93,10 +94,7 @@ public class SecurityServiceImpl implements SecurityService {
 
 	@Override
 	public String resetPassword(String email) {
-		User user = findUserByEmail(email);
-		if (isNull(user)) {
-			throw new JCartException(INVALID_EMAILADDRESS);
-		}
+		User user = findUserByEmail(email).orElseThrow(() -> new JCartException(INVALID_EMAILADDRESS));
 		String uuid = UUID.randomUUID().toString();
 		user.setPasswordResetToken(uuid);
 		return uuid;
@@ -104,19 +102,13 @@ public class SecurityServiceImpl implements SecurityService {
 
 	@Override
 	public boolean verifyPasswordResetToken(String email, String token) {
-		User user = findUserByEmail(email);
-		if (isNull(user)) {
-			throw new JCartException(INVALID_EMAILADDRESS);
-		}
+		User user = findUserByEmail(email).orElseThrow(() -> new JCartException(INVALID_EMAILADDRESS));
 		return (StringUtils.hasText(token) && token.equals(user.getPasswordResetToken()));
 	}
 
 	@Override
 	public void updatePassword(String email, String token, String encodedPwd) {
-		User user = findUserByEmail(email);
-		if (isNull(user)) {
-			throw new JCartException(INVALID_EMAILADDRESS);
-		}
+		User user = findUserByEmail(email).orElseThrow(() -> new JCartException(INVALID_EMAILADDRESS));
 		if (!StringUtils.hasText(token) || !token.equals(user.getPasswordResetToken())) {
 			throw new JCartException("Invalid password reset token");
 		}
@@ -132,8 +124,8 @@ public class SecurityServiceImpl implements SecurityService {
 
 	@Override
 	public User createUser(User user) {
-		User userByEmail = findUserByEmail(user.getEmail());
-		if (nonNull(userByEmail)) {
+		Optional<User> userByEmail = findUserByEmail(user.getEmail());
+		if (userByEmail.isPresent()) {
 			throw new JCartException("Email " + user.getEmail() + " already in use");
 		}
 		List<Role> persistedRoles = user.getRoles().stream()
