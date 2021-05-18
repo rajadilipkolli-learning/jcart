@@ -15,8 +15,6 @@
  */
 package com.sivalabs.jcart.admin.security;
 
-import static java.util.Objects.isNull;
-
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -42,10 +40,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String userEmail) {
-		User user = securityService.findUserByEmail(userEmail);
-		if (isNull(user)) {
-			throw new UsernameNotFoundException("Email " + userEmail + " not found");
-		}
+		User user = securityService.findUserByEmail(userEmail)
+				.orElseThrow(() -> new UsernameNotFoundException("Email " + userEmail + " not found"));
 		return new AuthenticatedUser(user);
 	}
 

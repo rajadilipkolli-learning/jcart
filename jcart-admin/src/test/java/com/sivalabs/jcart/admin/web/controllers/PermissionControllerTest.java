@@ -1,46 +1,37 @@
 package com.sivalabs.jcart.admin.web.controllers;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.Arrays;
-import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import com.sivalabs.jcart.admin.web.utils.HeaderTitleConstants;
+import com.sivalabs.jcart.entities.Permission;
+import com.sivalabs.jcart.security.SecurityService;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-import com.sivalabs.jcart.admin.web.utils.HeaderTitleConstants;
-import com.sivalabs.jcart.entities.Permission;
-import com.sivalabs.jcart.security.SecurityService;
+import java.util.Collections;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author rajakolli
  *
  */
-@RunWith(SpringRunner.class)
 @WebMvcTest(PermissionController.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PermissionControllerTest {
 
 	@Autowired
-	private WebApplicationContext context;
-
 	MockMvc mockMvc;
 
 	@MockBean
@@ -48,18 +39,15 @@ public class PermissionControllerTest {
 
 	private PermissionController permissionController;
 
-	private String name = "JUNIT Name";
+	private final String name = "JUNIT Name";
 
-	private String description = "JUNIT Description";
-
-	@Before
-	public void setUp() throws Exception {
-		mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity())
-				.build();
+	@BeforeAll
+	public void setUp() {
 		Permission permission = new Permission();
 		permission.setName(name);
+		String description = "JUNIT Description";
 		permission.setDescription(description);
-		List<Permission> permissionList = Arrays.asList(permission);
+		List<Permission> permissionList = Collections.singletonList(permission);
 		when(securityService.getAllPermissions()).thenReturn(permissionList);
 		permissionController = new PermissionController(securityService);
 	}
@@ -71,8 +59,8 @@ public class PermissionControllerTest {
 	@Test
 	public void testGetHeaderTitle() {
 		String headerTitle = permissionController.getHeaderTitle();
-		assertNotNull(headerTitle);
-		assertEquals(HeaderTitleConstants.PERMISSIONTITLE, headerTitle);
+		assertThat(headerTitle).isNotNull();
+		assertThat(HeaderTitleConstants.PERMISSIONTITLE).isEqualTo(headerTitle);
 	}
 
 	/**
@@ -89,13 +77,13 @@ public class PermissionControllerTest {
 	@Test
 	@WithAnonymousUser
 	public void testListPermissionsWithAnonymousUser() throws Exception {
-		this.mockMvc.perform(get("/permissions")).andExpect(status().isUnauthorized());
+		this.mockMvc.perform(get("/permissions")).andExpect(status().isFound());
 	}
 
 	@Test
 	@WithMockUser(username = "admin", roles = { "MANAGE_PERMISSIONS" })
 	public void testIsLoggedIn() {
-		assertFalse(AbstractJCartAdminController.isLoggedIn());
+		assertThat(AbstractJCartAdminController.isLoggedIn()).isFalse();
 	}
 
 }

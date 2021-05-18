@@ -17,3 +17,4 @@ build
 .gradle
 .idea/
 *.iml
+*.factorypath

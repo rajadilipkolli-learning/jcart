@@ -3,7 +3,7 @@
  */
 package com.sivalabs.jcart.admin.web.validators;
 
-import static java.util.Objects.nonNull;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -36,8 +36,8 @@ public class UserValidator implements Validator {
 	public void validate(Object target, Errors errors) {
 		User user = (User) target;
 		String email = user.getEmail();
-		User userByEmail = securityService.findUserByEmail(email);
-		if (nonNull(userByEmail)) {
+		Optional<User> userByEmail = securityService.findUserByEmail(email);
+		if (userByEmail.isPresent()) {
 			errors.rejectValue("email", "error.exists", new Object[] { email },
 					"Email " + email + " already in use");
 		}

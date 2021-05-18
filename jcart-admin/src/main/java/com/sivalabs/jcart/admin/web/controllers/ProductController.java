@@ -15,23 +15,13 @@
  */
 package com.sivalabs.jcart.admin.web.controllers;
 
-import static com.sivalabs.jcart.admin.security.SecurityUtil.MANAGE_PRODUCTS;
-import static com.sivalabs.jcart.admin.web.utils.HeaderTitleConstants.PRODUCTTITLE;
-import static com.sivalabs.jcart.admin.web.utils.WebUtils.IMAGES_DIR;
-import static java.util.Objects.nonNull;
-import static org.apache.commons.io.IOUtils.copy;
-
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.sivalabs.jcart.JCartException;
+import com.sivalabs.jcart.admin.web.models.ProductForm;
+import com.sivalabs.jcart.admin.web.validators.ProductFormValidator;
+import com.sivalabs.jcart.catalog.CatalogService;
+import com.sivalabs.jcart.entities.Category;
+import com.sivalabs.jcart.entities.Product;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -44,14 +34,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.sivalabs.jcart.JCartException;
-import com.sivalabs.jcart.admin.web.models.ProductForm;
-import com.sivalabs.jcart.admin.web.validators.ProductFormValidator;
-import com.sivalabs.jcart.catalog.CatalogService;
-import com.sivalabs.jcart.entities.Category;
-import com.sivalabs.jcart.entities.Product;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
+import static com.sivalabs.jcart.admin.security.SecurityUtil.MANAGE_PRODUCTS;
+import static com.sivalabs.jcart.admin.web.utils.HeaderTitleConstants.PRODUCTTITLE;
+import static com.sivalabs.jcart.admin.web.utils.WebUtils.IMAGES_DIR;
+import static java.util.Objects.nonNull;
+import static org.apache.commons.io.IOUtils.copy;
 
 /**
  * @author Siva
@@ -65,15 +61,10 @@ public class ProductController extends AbstractJCartAdminController {
 
 	private static final String VIEWPREFIX = "products/";
 
-	private CatalogService catalogService;
+	private final CatalogService catalogService;
 
-	private ProductFormValidator productFormValidator;
+	private final ProductFormValidator productFormValidator;
 
-	/**
-	 * Spring {@link Autowired} Constructor Injection
-	 * @param catalogService
-	 * @param productFormValidator
-	 */
 	public ProductController(CatalogService catalogService,
 			ProductFormValidator productFormValidator) {
 		this.catalogService = catalogService;

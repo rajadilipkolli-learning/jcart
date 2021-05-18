@@ -1,6 +1,7 @@
 package com.sivalabs.jcart.security;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.sivalabs.jcart.entities.Permission;
 import com.sivalabs.jcart.entities.Role;
@@ -8,7 +9,7 @@ import com.sivalabs.jcart.entities.User;
 
 public interface SecurityService {
 
-	User findUserByEmail(String userEmail);
+	Optional<User> findUserByEmail(String userEmail);
 
 	List<Permission> getAllPermissions();
 

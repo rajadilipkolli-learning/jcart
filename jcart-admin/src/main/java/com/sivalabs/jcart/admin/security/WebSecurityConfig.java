@@ -8,14 +8,12 @@ package com.sivalabs.jcart.admin.security;
  *
  */
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -23,19 +21,12 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableGlobalMethodSecurity(securedEnabled = true, proxyTargetClass = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	private UserDetailsService customUserDetailsService;
+	private final UserDetailsService customUserDetailsService;
+	private final PasswordEncoder passwordEncoder;
 
-	/**
-	 * @param customUserDetailsService
-	 */
-	public WebSecurityConfig(UserDetailsService customUserDetailsService) {
-		super();
+	public WebSecurityConfig(UserDetailsService customUserDetailsService, PasswordEncoder passwordEncoder) {
 		this.customUserDetailsService = customUserDetailsService;
-	}
-
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	@Override
@@ -53,7 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(customUserDetailsService)
-				.passwordEncoder(passwordEncoder());
+				.passwordEncoder(passwordEncoder);
 	}
 
 }

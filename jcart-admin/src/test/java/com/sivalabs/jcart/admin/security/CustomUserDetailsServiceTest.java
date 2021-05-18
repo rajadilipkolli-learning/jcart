@@ -1,25 +1,21 @@
-/**
- *
- */
+
 package com.sivalabs.jcart.admin.security;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.BDDMockito.given;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.sivalabs.jcart.entities.Permission;
 import com.sivalabs.jcart.entities.Role;
@@ -30,11 +26,8 @@ import com.sivalabs.jcart.security.SecurityService;
  * @author rajakolli
  *
  */
-@RunWith(SpringRunner.class)
-public class CustomUserDetailsServiceTest {
-
-	@Rule
-	public final ExpectedException exception = ExpectedException.none();
+@ExtendWith(SpringExtension.class)
+class CustomUserDetailsServiceTest {
 
 	@MockBean
 	private SecurityService securityService;
@@ -46,8 +39,13 @@ public class CustomUserDetailsServiceTest {
 	/**
 	 * @throws java.lang.Exception
 	 */
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+		customUserDetailsService = new CustomUserDetailsService(securityService);
+	}
+
+	@Test
+	void testLoadUserByUsername() {
 		User user = new User();
 		user.setEmail(email);
 		user.setPassword("passwrd");
@@ -59,27 +57,17 @@ public class CustomUserDetailsServiceTest {
 		role.setPermissions(permissions);
 		List<Role> roles = Collections.singletonList(role);
 		user.setRoles(roles);
-		when(securityService.findUserByEmail(email)).thenReturn(user);
-		customUserDetailsService = new CustomUserDetailsService(securityService);
-	}
-
-	/**
-	 * Test method for
-	 * {@link com.sivalabs.jcart.admin.security.CustomUserDetailsService#loadUserByUsername(java.lang.String)}.
-	 */
-	@Test
-	public void testLoadUserByUsername() {
+		given(securityService.findUserByEmail(email)).willReturn(Optional.of(user));
 		UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
-		assertEquals(email, userDetails.getUsername());
+		assertThat(userDetails.getUsername()).isEqualTo(email);
 		assertThat(userDetails.getPassword()).isEqualTo("passwrd");
 	}
 
-	@Test(expected = UsernameNotFoundException.class)
-	public void testLoadUserByEmail() {
-		when(securityService.findUserByEmail(email)).thenReturn(null);
-		UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
-		exception.expectMessage("Email JUNIT_EMAIL not found");
-		assertNull(userDetails);
+	@Test
+	void testLoadUserByEmail() {
+		given(securityService.findUserByEmail(email)).willReturn(Optional.empty());
+		assertThatThrownBy(() -> customUserDetailsService.loadUserByUsername(email))
+				.hasMessage("Email JUNIT_EMAIL not found").isInstanceOf(UsernameNotFoundException.class);
 	}
 
 }
