@@ -1,6 +1,7 @@
 # Jcart (forked from [sivaprasadreddy](https://github.com/sivaprasadreddy/jcart))
 JCart is a simple e-commerce application built with Spring.
 
+<<<<<<< HEAD
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/c9cd10aebb104847aeb0240d73d64f30)](https://www.codacy.com/app/rajadilipkolli/jcart?utm_source=github.com&utm_medium=referral&utm_content=rajadilipkolli/jcart&utm_campaign=badger)
 [![Build status](https://travis-ci.org/rajadilipkolli/jcart.svg?branch=master)](https://travis-ci.org/rajadilipkolli/jcart) 
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.sivalabs:jcart&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.sivalabs:jcart)
@@ -66,3 +67,25 @@ login to Admin by using the url http://localhost:9090 and by entering the creden
 		
   - Once we commit to github a travis-ci build will be generated and after successful Completion of build results will be published to sonarQube online		
   
+=======
+How to run it?
+
+git clone https://github.com/sivaprasadreddy/jcart.git
+
+cd jcart
+
+jcart> mvn clean install
+
+jcart> cd jcart-admin
+
+jcart-admin> mvn spring-boot:run
+
+Now you can access JCart Admin at https://localhost:9443/ 
+
+
+jcart> cd jcart-site
+
+jcart-site> mvn spring-boot:run
+
+Now you can access JCart Site at https://localhost:8443/ 
+>>>>>>> 45c1000b657507e49c53d04ecfea10f9a58dddee
