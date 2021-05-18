@@ -8,8 +8,8 @@ import java.util.Set;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.sivalabs.jcart.catalog.CatalogService;
 import com.sivalabs.jcart.entities.Category;
@@ -32,7 +32,7 @@ public class HomeController extends AbstractJCartSiteController {
 		return "Home";
 	}
 
-	@RequestMapping("/home")
+	@GetMapping("/home")
 	public String home(Model model) {
 		List<Category> previewCategories = new ArrayList<>();
 		List<Category> categories = catalogService.getAllCategories();
@@ -48,7 +48,7 @@ public class HomeController extends AbstractJCartSiteController {
 		return "home";
 	}
 
-	@RequestMapping("/categories/{name}")
+	@GetMapping("/categories/{name}")
 	public String category(@PathVariable String name, Model model) {
 		Category category = catalogService.getCategoryByName(name);
 		model.addAttribute("category", category);
