@@ -9,6 +9,10 @@
     </parent>
     <artifactId>jcart-core</artifactId>
 
+    <properties>
+	<sonar.projectKey>rajadileepkolli_jcart_core</sonar.projectKey>
+    </properties>
+	
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
