@@ -8,10 +8,6 @@
         <version>1.0</version>
     </parent>
     <artifactId>jcart-core</artifactId>
-
-    <properties>
-	<sonar.projectKey>rajadileepkolli_jcart_core</sonar.projectKey>
-    </properties>
 	
     <dependencies>
         <dependency>
