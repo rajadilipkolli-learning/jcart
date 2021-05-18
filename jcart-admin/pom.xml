@@ -9,6 +9,10 @@
 	</parent>
 
 	<artifactId>jcart-admin</artifactId>
+	
+        <properties>
+	    <sonar.projectKey>rajadileepkolli_jcart_admin</sonar.projectKey>
+        </properties>
 
 	<dependencies>
 		<dependency>
